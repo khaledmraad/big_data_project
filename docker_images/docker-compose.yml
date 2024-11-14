@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  hadoop-master:
+    image: liliasfaxi/spark-hadoop:hv-2.7.2
+    container_name: hadoop-master
+    hostname: hadoop-master
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9870:9870"   # Namenode UI
+      - "8088:8088"   # Resource Manager UI
+      - "7077:7077"   # Spark Master
+      - "16010:16010" # JMX (for monitoring)
+      - "50070:50070" # WebHDFS (HTTP)
+      - "9000:9000"   # YARN UI
+    networks:
+      - hadoop_network
+    volumes:
+      - ./hadoop-config:/opt/hadoop/etc/hadoop
+      - hadoop_data:/hadoop
+    command: ["/bin/bash", "-c", "service ssh start && tail -f /dev/null"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  hadoop-slave1:
+    image: liliasfaxi/spark-hadoop:hv-2.7.2
+    container_name: hadoop-slave1
+    hostname: hadoop-slave1
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "8040:8042"
+      - "50075:50075"
+    networks:
+      - hadoop_network
+    volumes:
+      - ./hadoop-config:/opt/hadoop/etc/hadoop
+      - hadoop_data:/hadoop
+    command: ["/bin/bash", "-c", "service ssh start && tail -f /dev/null"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  hadoop-slave2:
+    image: liliasfaxi/spark-hadoop:hv-2.7.2
+    container_name: hadoop-slave2
+    hostname: hadoop-slave2
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "8041:8042"
+      - "50076:50075"
+    networks:
+      - hadoop_network
+    volumes:
+      - ./hadoop-config:/opt/hadoop/etc/hadoop
+      - hadoop_data:/hadoop
+    command: ["/bin/bash", "-c", "service ssh start && tail -f /dev/null"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  hadoop_data:
+
+networks:
+  hadoop_network:
+    driver: bridge
+    name: hadoop

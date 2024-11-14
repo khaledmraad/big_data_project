@@ -1,0 +1,16 @@
+https://medium.com/towards-data-engineering/data-processing-architectures-lambda-vs-kappa-for-big-data-8cc9a7edeffd
+
+The Lambda Architecture is a layered approach that involves a batch layer, a
+speed layer, and a serving layer. The batch layer stores and processes
+historical data in batches, while the speed layer processes real-time data
+streams in a distributed manner. The serving layer combines the outputs of the
+batch and speed layers to provide queryable views of the data.
+
+In contrast, the Kappa Architecture is a simplified version of the Lambda
+Architecture that eliminates the need for the batch layer. Instead, it uses a
+stream processing system to process real-time data and store it in a database.
+This architecture is ideal for scenarios where real-time insights are critical
+and historical data analysis is less important.
+
+
+Lambda Architecture is good

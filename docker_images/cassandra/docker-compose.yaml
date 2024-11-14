@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=GooglePlay_data
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_LISTENER_INTERFACE=eth0
+      - CASSANDRA_LISTENER_BIND_ADDRESS=0.0.0.0
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_SEEDS=cassandra
+    ports:
+      - "9042:9042" # CQL
+      - "7000:7000" # Internode communication
+      - "7001:7001" # SSL internode communication
+      - "7199:7199" # JMX
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    networks:
+      - cassandra_network
+    healthcheck:
+      test: ["CMD", "cqlsh", "--execute", "SELECT now()"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  cassandra_data:
+
+networks:
+  cassandra_network:
+    driver: bridge

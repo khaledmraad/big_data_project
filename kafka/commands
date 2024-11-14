@@ -1,0 +1,40 @@
+sudo docker run -p 9092:9092 apache/kafka               
+
+sudo docker exec --workdir /opt/kafka/bin/ -it broker sh
+
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic testtest --from-beginning
+
+
+python -m venv venv                                       
+ source ./venv/bin/activate
+
+pip install kafka-python-ng
+
+é
+pip install pyhdfs
+
+
+
+docker run --name some-cassandra -v /my/own/datadir:/var/lib/cassandra -d cassandra:tag
+
+val df = spark.read.format("csv").option("header", "true").option("mode", "DROPMALFORMED").load("/test/Google-Playstore.csv")
+
+# scala> df.show()
+
+val numRows = df.count()
+val numColumns = df.columns.length
+
+
+val cleaned_df = df.filter(df("App Name").isNotNull)
+
+
+val columnsToRemove = Seq("Developer Website", "Developer Email", "Privacy Policy", "Scraped Time")
+val final_df = cleaned_df.drop(columnsToRemove: _*)
+final_df.printSchema()
+
+val cleanedDf = final_df.columns.foldLeft(df) { (tempDf, colName) =>
+  tempDf.withColumn(colName, regexp_replace(col(colName), ",", " "))
+}
+
+
+final_df.write.option("header", "true").mode("overwrite").csv("/test/result")   
